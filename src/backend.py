@@ -2,6 +2,7 @@ import psycopg2
 from config import config
 
 # teste
+# teste 123
 
 class Database:
 
