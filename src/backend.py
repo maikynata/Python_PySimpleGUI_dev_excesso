@@ -1,6 +1,8 @@
 import psycopg2
 from config import config
 
+# teste
+
 class Database:
 
     def __init__():
