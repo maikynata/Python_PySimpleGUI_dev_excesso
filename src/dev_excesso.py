@@ -3,17 +3,17 @@ import PySimpleGUI as sg
 
 print = sg.Print
 
-def add_ids():
+def select_prod():
     try:
 
-        conn_string = "host='10.14.0.6' dbname='erp' user='powerbi' password='B3L3Z4.powerbi'"
+        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
-        sql_update_query = """update produtos
-                              set prod_extra3 = CONCAT(prod_extra3,',98,18')
-                              where prod_codigo in (select prun_prod_codigo from produn
-                              where prun_unid_codigo='001' and prun_setor='ECOMMERCE' and prun_oferta='S')"""
+        sql_update_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
+                                prun_estmin  from produtos, produn
+                                where prod_codigo=prun_prod_codigo and prun_unid_codigo='001' 
+                                and prod_codigo in (101567,649848,590045)"""
         cursor.execute(sql_update_query)
         connection.commit()
         count = cursor.rowcount
@@ -30,19 +30,16 @@ def add_ids():
             connection.close()
 
 
-def remove_ids():
+def update_prod():
     try:
 
-        conn_string = "host='10.14.0.6' dbname='erp' user='powerbi' password='B3L3Z4.powerbi'"
+        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste1234'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
-        sql_update_query = """update produtos
-                              set prod_extra3 = removed_id_oferta.ids_categ from 
-                              (SELECT prod_codigo, prod_descricao, prod_complemento, prod_marca, prod_extra3, 
-                              regexp_replace(prod_extra3, ',\m98,18', '', 'gi') as ids_categ from produtos
-                              where (prod_extra3 like '%,98' or prod_extra3 like '%,18') order by prod_codigo) as removed_id_oferta
-                              where produtos.prod_codigo=removed_id_oferta.prod_codigo"""
+        sql_update_query = """update produn
+                              set prun_estmin=2
+                              where prun_unid_codigo='001' and prun_prod_codigo=101567"""
         cursor.execute(sql_update_query)
         connection.commit()
         count = cursor.rowcount
@@ -60,14 +57,22 @@ def remove_ids():
 
 
 # Lookup dictionary that aps button to function to call
-dispatch_dictionary = {'Adicionar IDs':add_ids, 'Remover IDs':remove_ids}
+#dispatch_dictionary = {'Adicionar IDs':select_prod, 'Remover IDs':update_prod}
+
 
 # Layout the design of the GUI
-layout = [[sg.Text("Adicionar ou Remover IDs de Oferta",auto_size_text=True)],
-          [sg.Button("Adicionar IDs"), sg.Button("Remover IDs", button_color=('red','#FFFFFF'))],]
+layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
+          [sg.Input('Tinta Biocolor 1.0 Preto Niasi', background_color='#F7F3EC', readonly=True, size=(37,1))],
+          [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("       Est. Min", justification='right')],
+          [sg.Input(size=(11,1)), sg.Input(size=(11,1)), sg.Input(size=(11,1))],
+          [sg.Text("V.M.3"), sg.Text("            V.M.12"), sg.Text("        Venda Mês"), ],
+          [sg.Input(size=(11,1)), sg.Input(size=(11,1)), sg.Input(size=(11,1))],
+          [sg.Text("Estoque Ideal"), sg.Text("Qtd. a Devolver")],
+          [sg.Input(size=(11,1)), sg.Input(size=(11,1))],]
+
 
 # Create a window to the user
-window = sg.Window("Category Off", layout)
+window = sg.Window("Dev_Excesso", layout)
 
 # Create an event loop
 while True:
@@ -76,14 +81,11 @@ while True:
     # presses the OK button
     if event == sg.WIN_CLOSED or event == 'Cancelar':  # if user closes window or clicks cancel
         break
-    if event in dispatch_dictionary:
-        func_to_call = dispatch_dictionary[event]  # get function from dispatch dictionary
-        func_to_call()
     else:
         sg.popup_ok('Event {} not in dispatch dictionary'.format(event))
 
 window.close()
 
 # All done!
-sg.popup_ok('Ferramenta de Gestão de IDs Encerrada!!!')
+sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
 
