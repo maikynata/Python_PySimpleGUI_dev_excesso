@@ -17,7 +17,7 @@ def select_prod():
         cursor.execute(sql_update_query)
         connection.commit()
         count = cursor.rowcount
-        sg.popup_ok(count, 'Produtos alterados!')
+        sg.popup_ok(count, 'Produtos selecionados!')
 
 
     except(Exception, psycopg2.Error) as error:
@@ -33,7 +33,7 @@ def select_prod():
 def update_prod():
     try:
 
-        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste1234'"
+        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
@@ -61,18 +61,29 @@ def update_prod():
 
 
 # Layout the design of the GUI
+QT_ENTER_KEY1 = 'special 16777220'
+QT_ENTER_KEY2 = 'special 16777221'
+enter_buttons = [chr(13), "Return:13"]
+
+dispatch_dictionary = {'Adicionar IDs':select_prod, 'Remover IDs':update_prod}
+
 layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
-          [sg.Input('Tinta Biocolor 1.0 Preto Niasi', background_color='#F7F3EC', readonly=True, size=(37,1))],
+          [sg.Input('Tinta Biocolor 1.0 Preto Niasi', readonly=True, size=(37,1))],
           [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("       Est. Min", justification='right')],
           [sg.Input(size=(11,1)), sg.Input(size=(11,1)), sg.Input(size=(11,1))],
           [sg.Text("V.M.3"), sg.Text("            V.M.12"), sg.Text("        Venda Mês"), ],
           [sg.Input(size=(11,1)), sg.Input(size=(11,1)), sg.Input(size=(11,1))],
-          [sg.Text("Estoque Ideal"), sg.Text("Qtd. a Devolver")],
-          [sg.Input(size=(11,1)), sg.Input(size=(11,1))],]
+          [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
+          [sg.Input(size=(11,1)), sg.Input(size=(11,1))],
+          [sg.Text("Cód. Prod."), sg.Text("     Qtd. Dev.")],
+          [sg.Input(size=(11, 1), background_color='#bebbbb'), sg.Input(size=(11, 1), key='/r')],
+          [sg.Button("Submit", bind_return_key=True)]]
+
 
 
 # Create a window to the user
 window = sg.Window("Dev_Excesso", layout)
+
 
 # Create an event loop
 while True:
@@ -82,7 +93,8 @@ while True:
     if event == sg.WIN_CLOSED or event == 'Cancelar':  # if user closes window or clicks cancel
         break
     else:
-        sg.popup_ok('Event {} not in dispatch dictionary'.format(event))
+        event == 'Submit'
+        select_prod()
 
 window.close()
 
