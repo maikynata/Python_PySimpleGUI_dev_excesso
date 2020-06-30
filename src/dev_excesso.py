@@ -63,38 +63,40 @@ def update_prod():
 # Layout the design of the GUI
 QT_ENTER_KEY1 = 'special 16777220'
 QT_ENTER_KEY2 = 'special 16777221'
-enter_buttons = [chr(13), "Return:13"]
+#enter_buttons = [chr(13), "Return:13"]
 
 dispatch_dictionary = {'Adicionar IDs':select_prod, 'Remover IDs':update_prod}
 
 layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Input('Tinta Biocolor 1.0 Preto Niasi', readonly=True, size=(37,1))],
           [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("       Est. Min", justification='right')],
-          [sg.Input(size=(11,1)), sg.Input(size=(11,1)), sg.Input(size=(11,1))],
+          [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1),readonly=True)],
           [sg.Text("V.M.3"), sg.Text("            V.M.12"), sg.Text("        Venda Mês"), ],
-          [sg.Input(size=(11,1)), sg.Input(size=(11,1)), sg.Input(size=(11,1))],
+          [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
           [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
-          [sg.Input(size=(11,1)), sg.Input(size=(11,1))],
+          [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
           [sg.Text("Cód. Prod."), sg.Text("     Qtd. Dev.")],
-          [sg.Input(size=(11, 1), background_color='#bebbbb'), sg.Input(size=(11, 1), key='/r')],
-          [sg.Button("Submit", bind_return_key=True)]]
-
-
+          [sg.Input(size=(11, 1), background_color='#bebbbb', key='-COD-', focus=True), sg.Input(size=(11, 1), key='-QTD-')],
+          [sg.Button('SEND', visible=False, bind_return_key=True)],]
 
 # Create a window to the user
-window = sg.Window("Dev_Excesso", layout)
-
+window = sg.Window("Dev_Excesso", layout, element_justification='center')
 
 # Create an event loop
 while True:
     event, values = window.read()
-    # End program if user closes window or
-    # presses the OK button
-    if event == sg.WIN_CLOSED or event == 'Cancelar':  # if user closes window or clicks cancel
+    # End program if user closes window
+    if event == sg.WIN_CLOSED:
         break
+    if event == 'SEND':
+        query = values['-COD-'].rstrip()
+        # EXECUTE YOUR COMMAND HERE
+        sg.popup('The command you entered was {}'.format(query))
+        #sg.popup('You have submited ENTER SEND')
+
     else:
-        event == 'Submit'
-        select_prod()
+        event == '-QTD-'
+        sg.popup('teste')
 
 window.close()
 
