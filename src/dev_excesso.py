@@ -89,13 +89,13 @@ while True:
     if event == sg.WIN_CLOSED:
         break
     if event == 'SEND':
-        query = values['-COD-'].rstrip()
+        codigo = values['-COD-']
         # EXECUTE YOUR COMMAND HERE
-        sg.popup('The command you entered was {}'.format(query))
+        sg.popup('Código do produto digitado:', codigo)
         #sg.popup('You have submited ENTER SEND')
+        elem = window.find_element_with_focus()
 
-    else:
-        event == '-QTD-'
+    elif event == '-QTD-':
         sg.popup('teste')
 
 window.close()
