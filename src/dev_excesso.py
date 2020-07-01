@@ -98,11 +98,15 @@ while True:
     #
     if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
         codigo = values['-COD-']
+        #print(codigo)
+
+        row = select_prod(codigo)
+        if len(row) == 0:
+            sg.popup('Produto não encontrado: ', codigo)
 
         for row in select_prod(codigo):
-            window['nome_prod'].update(row[0])
-
-        window.FindElement('-QTD-').SetFocus()
+            window['nome_prod'].update(row[0] + row[1] + ' ' + row[2])
+            window.FindElement('-QTD-').SetFocus()
 
     if event == 'SEND' and values['-QTD-'] != '':
          qtd = values['-QTD-']
