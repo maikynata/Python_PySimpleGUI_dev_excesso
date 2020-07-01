@@ -76,8 +76,9 @@ layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
           [sg.Text("Cód. Prod."), sg.Text("     Qtd. Dev.")],
-          [sg.Input(size=(11, 1), background_color='#bebbbb', key='-COD-', focus=True), sg.Input(size=(11, 1), key='-QTD-')],
-          [sg.Button('SEND', visible=False, bind_return_key=True)],]
+          [sg.Input(size=(11, 1), background_color='#bebbbb', key='-COD-', focus=True, change_submits=True),
+           sg.Input(size=(11, 1), key='-QTD-')],
+          [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],]
 
 # Create a window to the user
 window = sg.Window("Dev_Excesso", layout, element_justification='center')
@@ -88,15 +89,22 @@ while True:
     # End program if user closes window
     if event == sg.WIN_CLOSED:
         break
-    if event == 'SEND':
-        codigo = values['-COD-']
-        # EXECUTE YOUR COMMAND HERE
-        sg.popup('Código do produto digitado:', codigo)
-        #sg.popup('You have submited ENTER SEND')
-        elem = window.find_element_with_focus()
 
-    elif event == '-QTD-':
-        sg.popup('teste')
+    # if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
+    #     window.FindElement('-QTD-').SetFocus()
+    #
+    if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
+        window.FindElement('-QTD-').SetFocus()
+
+    if event == 'SEND' and values['-QTD-'] != '':
+         qtd = values['-QTD-']
+         sg.popup('QTD do produto digitado:', qtd)
+
+        #sg.popup('You have submited ENTER SEND')
+    #     elem = window.find_element_with_focus()
+    #
+    # elif event == '-QTD-':
+    #     sg.popup('teste')
 
 window.close()
 
