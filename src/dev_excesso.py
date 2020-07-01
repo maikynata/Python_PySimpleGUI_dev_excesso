@@ -110,7 +110,7 @@ while True:
 
     if event == 'SEND' and values['-QTD-'] != '':
          qtd = values['-QTD-']
-         sg.popup('QTD do produto digitado:', qtd)
+         sg.popup('Qtd. do produto digitado:', qtd)
 
         #sg.popup('You have submited ENTER SEND')
     #     elem = window.find_element_with_focus()
