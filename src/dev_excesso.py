@@ -73,7 +73,8 @@ dispatch_dictionary = {'Adicionar IDs':select_prod, 'Remover IDs':update_prod}
 layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Input(size=(37,1), readonly=True, key='nome_prod')],
           [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("       Est. Min", justification='right')],
-          [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1),readonly=True)],
+          [sg.Input(size=(11,1), readonly=True, key='preco_prod'),
+           sg.Input(size=(11,1), readonly=True, key='estoque_prod'), sg.Input(size=(11,1),readonly=True, key='estmin_prod')],
           [sg.Text("V.M.3"), sg.Text("            V.M.12"), sg.Text("        Venda Mês"), ],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
           [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
@@ -96,6 +97,11 @@ while True:
     # if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
     #     window.FindElement('-QTD-').SetFocus()
     #
+
+    if len(values['-COD-']) and values['-COD-'][-1] not in ('0123456789'):
+        # delete last char from input
+        window['-COD-'].update(values['-COD-'][:-1])
+
     if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
         codigo = values['-COD-']
         #print(codigo)
@@ -105,18 +111,20 @@ while True:
             sg.popup('Produto não encontrado: ', codigo)
 
         for row in select_prod(codigo):
-            window['nome_prod'].update(row[0] + row[1] + ' ' + row[2])
+            window['nome_prod'].update(row[0] + ' ' + row[1] + ' ' + row[2])
+            window['preco_prod'].update(row[3])
+            window['estoque_prod'].update(row[4])
+            window['estmin_prod'].update(row[5])
             window.FindElement('-QTD-').SetFocus()
 
-    if event == 'SEND' and values['-QTD-'] != '':
-         qtd = values['-QTD-']
-         sg.popup('Qtd. do produto digitado:', qtd)
 
-        #sg.popup('You have submited ENTER SEND')
-    #     elem = window.find_element_with_focus()
-    #
-    # elif event == '-QTD-':
-    #     sg.popup('teste')
+    if event == 'SEND' and values['-QTD-'] != '':
+        if values['-COD-'] == '':
+            sg.popup('É Necessário digitar o código')
+            window.FindElement('-COD-').SetFocus()
+        else:
+            qtd = values['-QTD-']
+            sg.popup('Qtd. do produto digitado:', qtd)
 
 window.close()
 
