@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 
 print = sg.Print
 
-def select_prod():
+def select_prod(prod_codigo):
     try:
 
         conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
@@ -13,8 +13,11 @@ def select_prod():
         sql_update_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
                                 prun_estmin  from produtos, produn
                                 where prod_codigo=prun_prod_codigo and prun_unid_codigo='001' 
-                                and prod_codigo in (101567,649848,590045)"""
-        cursor.execute(sql_update_query)
+                                and prod_codigo=%s"""
+        #CAST(prod_codigo=%s as numeric)
+        cursor.execute(sql_update_query, [prod_codigo])
+        rows = cursor.fetchall()
+        return rows
         connection.commit()
         count = cursor.rowcount
         sg.popup_ok(count, 'Produtos selecionados!')
@@ -68,7 +71,7 @@ QT_ENTER_KEY2 = 'special 16777221'
 dispatch_dictionary = {'Adicionar IDs':select_prod, 'Remover IDs':update_prod}
 
 layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
-          [sg.Input('Tinta Biocolor 1.0 Preto Niasi', readonly=True, size=(37,1))],
+          [sg.Input(size=(37,1), readonly=True, key='nome_prod')],
           [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("       Est. Min", justification='right')],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1),readonly=True)],
           [sg.Text("V.M.3"), sg.Text("            V.M.12"), sg.Text("        Venda Mês"), ],
@@ -94,6 +97,11 @@ while True:
     #     window.FindElement('-QTD-').SetFocus()
     #
     if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
+        codigo = values['-COD-']
+
+        for row in select_prod(codigo):
+            window['nome_prod'].update(row[0])
+
         window.FindElement('-QTD-').SetFocus()
 
     if event == 'SEND' and values['-QTD-'] != '':
