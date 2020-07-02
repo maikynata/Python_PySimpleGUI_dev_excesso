@@ -67,8 +67,7 @@ def update_prod():
 QT_ENTER_KEY1 = 'special 16777220'
 QT_ENTER_KEY2 = 'special 16777221'
 #enter_buttons = [chr(13), "Return:13"]
-
-dispatch_dictionary = {'Adicionar IDs':select_prod, 'Remover IDs':update_prod}
+sg.SetOptions(element_padding=(4, 0))
 
 layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Input(size=(37,1), readonly=True, key='nome_prod')],
@@ -80,8 +79,8 @@ layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
           [sg.Text("Cód. Prod."), sg.Text("     Qtd. Dev.")],
-          [sg.Input(size=(11, 1), background_color='#bebbbb', key='-COD-', focus=True, change_submits=True),
-           sg.Input(size=(11, 1), key='-QTD-', change_submits=True)],
+          [sg.Input(size=(11, 1), text_color='Black', background_color='White', border_width=3, key='-COD-', focus=True, change_submits=True),
+           sg.Input(size=(11, 1), key='-QTD-', change_submits=True, background_color='White', border_width=2)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],]
 
 # Create a window to the user
