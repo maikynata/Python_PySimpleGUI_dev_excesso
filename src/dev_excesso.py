@@ -81,7 +81,7 @@ layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
           [sg.Text("Cód. Prod."), sg.Text("     Qtd. Dev.")],
           [sg.Input(size=(11, 1), background_color='#bebbbb', key='-COD-', focus=True, change_submits=True),
-           sg.Input(size=(11, 1), key='-QTD-')],
+           sg.Input(size=(11, 1), key='-QTD-', change_submits=True)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],]
 
 # Create a window to the user
@@ -94,13 +94,13 @@ while True:
     if event == sg.WIN_CLOSED:
         break
 
-    # if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
-    #     window.FindElement('-QTD-').SetFocus()
-    #
-
+    # delete char from input. Only accept numbers
     if len(values['-COD-']) and values['-COD-'][-1] not in ('0123456789'):
-        # delete last char from input
         window['-COD-'].update(values['-COD-'][:-1])
+
+    if len(values['-QTD-']) and values['-QTD-'][-1] not in ('0123456789'):
+         window['-QTD-'].update(values['-QTD-'][:-1])
+
 
     if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
         codigo = values['-COD-']
@@ -117,14 +117,13 @@ while True:
             window['estmin_prod'].update(row[5])
             window.FindElement('-QTD-').SetFocus()
 
-
     if event == 'SEND' and values['-QTD-'] != '':
         if values['-COD-'] == '':
             sg.popup('É Necessário digitar o código')
             window.FindElement('-COD-').SetFocus()
         else:
             qtd = values['-QTD-']
-            sg.popup('Qtd. do produto digitado:', qtd)
+            sg.popup('Qtd. do produto digitado:', qtd, title='Teste')
 
 window.close()
 
