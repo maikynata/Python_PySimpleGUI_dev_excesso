@@ -1,3 +1,8 @@
+#####
+# Author: Maiky Nata
+# Version: 1.0
+#####
+
 import psycopg2
 import PySimpleGUI as sg
 import datetime
@@ -86,7 +91,7 @@ layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],]
 
 # Create a window to the user
-window = sg.Window("Dev_Excesso", layout, element_justification='center')
+window = sg.Window("Dev_Excesso v1.0", layout, element_justification='center')
 
 # Create an event loop
 while True:
