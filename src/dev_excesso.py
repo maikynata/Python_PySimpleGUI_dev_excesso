@@ -1,5 +1,6 @@
 import psycopg2
 import PySimpleGUI as sg
+import datetime
 
 print = sg.Print
 
@@ -78,9 +79,10 @@ layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
           [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
-          [sg.Text("Cód. Prod."), sg.Text("     Qtd. Dev.")],
+          [sg.Text("Cód. Prod."), sg.Text("     Data Validade"), sg.Text("     Qtd. Dev.")],
           [sg.Input(size=(11, 1), text_color='Black', background_color='White', border_width=3, key='-COD-', focus=True, change_submits=True),
-           sg.Input(size=(11, 1), key='-QTD-', change_submits=True, background_color='White', border_width=2)],
+           sg.Input(size=(11, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
+           sg.Input(size=(11, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],]
 
 # Create a window to the user
@@ -96,6 +98,9 @@ while True:
     # delete char from input. Only accept numbers
     if len(values['-COD-']) and values['-COD-'][-1] not in ('0123456789'):
         window['-COD-'].update(values['-COD-'][:-1])
+
+    if len(values['-DATA-']) and values['-DATA-'][-1] not in ('/0123456789'):
+        window['-DATA-'].update(values['-DATA-'][:-1])
 
     if len(values['-QTD-']) and values['-QTD-'][-1] not in ('0123456789'):
          window['-QTD-'].update(values['-QTD-'][:-1])
@@ -114,7 +119,12 @@ while True:
             window['preco_prod'].update(row[3])
             window['estoque_prod'].update(row[4])
             window['estmin_prod'].update(row[5])
-            window.FindElement('-QTD-').SetFocus()
+            window.FindElement('-DATA-').SetFocus()
+
+    # if len (values['-DATA-']) == 8:
+    #         year, month, day = map(int, values['-DATA-'].split('-'))
+    #         date1 = datetime.date(day, month, year)
+    #         window['-DATA-'].update(values['-DATA-'][date1])
 
     if event == 'SEND' and values['-QTD-'] != '':
         if values['-COD-'] == '':
