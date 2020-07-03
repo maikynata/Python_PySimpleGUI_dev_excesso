@@ -64,15 +64,11 @@ def update_prod():
             cursor.close()
             connection.close()
 
-
-# Lookup dictionary that aps button to function to call
-#dispatch_dictionary = {'Adicionar IDs':select_prod, 'Remover IDs':update_prod}
-
-
 # Layout the design of the GUI
 QT_ENTER_KEY1 = 'special 16777220'
 QT_ENTER_KEY2 = 'special 16777221'
 #enter_buttons = [chr(13), "Return:13"]
+
 sg.SetOptions(element_padding=(4, 0))
 
 layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
