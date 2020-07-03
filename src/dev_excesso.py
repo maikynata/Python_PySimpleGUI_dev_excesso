@@ -104,8 +104,15 @@ while True:
     if len(values['-COD-']) and values['-COD-'][-1] not in ('0123456789'):
         window['-COD-'].update(values['-COD-'][:-1])
 
-    if len(values['-DATA-']) and values['-DATA-'][-1] not in ('/0123456789'):
+    if len(values['-DATA-']) and values['-DATA-'][-1] not in ('0123456789'):
         window['-DATA-'].update(values['-DATA-'][:-1])
+
+    if event == '-DATA-' and len(window.FindElement(event).Get()) == 6:
+        validade = str(values['-DATA-'])
+        data = datetime.datetime.strptime(validade, '%d%m%y').date()
+        data2 = datetime.datetime.strftime(data, '%d/%m/%y')
+        window['-DATA-'].update(data2)
+        window.FindElement('-QTD-').SetFocus()
 
     if len(values['-QTD-']) and values['-QTD-'][-1] not in ('0123456789'):
          window['-QTD-'].update(values['-QTD-'][:-1])
@@ -125,11 +132,6 @@ while True:
             window['estoque_prod'].update(row[4])
             window['estmin_prod'].update(row[5])
             window.FindElement('-DATA-').SetFocus()
-
-    # if len (values['-DATA-']) == 8:
-    #         year, month, day = map(int, values['-DATA-'].split('-'))
-    #         date1 = datetime.date(day, month, year)
-    #         window['-DATA-'].update(values['-DATA-'][date1])
 
     if event == 'SEND' and values['-QTD-'] != '':
         if values['-COD-'] == '':
