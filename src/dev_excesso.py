@@ -109,10 +109,14 @@ while True:
 
     if event == '-DATA-' and len(window.FindElement(event).Get()) == 6:
         validade = str(values['-DATA-'])
-        data = datetime.datetime.strptime(validade, '%d%m%y').date()
-        data2 = datetime.datetime.strftime(data, '%d/%m/%y')
-        window['-DATA-'].update(data2)
-        window.FindElement('-QTD-').SetFocus()
+        try:
+            data = datetime.datetime.strptime(validade, '%d%m%y').date()
+            data2 = datetime.datetime.strftime(data, '%d/%m/%y')
+            window['-DATA-'].update(data2)
+            window.FindElement('-QTD-').SetFocus()
+        except ValueError:
+            sg.popup_ok('Data inexistente, por favor redigite!')
+
 
     if len(values['-QTD-']) and values['-QTD-'][-1] not in ('0123456789'):
          window['-QTD-'].update(values['-QTD-'][:-1])
@@ -141,8 +145,8 @@ while True:
             qtd = values['-QTD-']
             sg.popup('Qtd. do produto digitado:', qtd, title='Teste')
 
+
 window.close()
 
 # All done!
 sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
-
