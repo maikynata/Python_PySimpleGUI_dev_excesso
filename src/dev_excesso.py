@@ -98,7 +98,7 @@ def insert_pendest(newlist):
         cursor.executemany(sql_update_query, newlist)
         connection.commit()
         count = cursor.rowcount
-        transacao_gravada = newlist[0:1]
+        transacao_gravada = newlist[0][0]
         sg.popup_ok('Transação Gravada: ', transacao_gravada)
 
 
