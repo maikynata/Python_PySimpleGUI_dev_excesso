@@ -96,7 +96,7 @@ layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
            sg.Input(size=(9, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
            sg.Input(size=(9, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],
-          [sg.Button('Gravar', key='INSERT', pad=(1,5))],]
+          [sg.Button('Gravar', key='INSERT', pad=(1,3))],]
 
 # Create a window to the user
 window = sg.Window("Dev_Excesso v1.0", layout, element_justification='center', size=(235,235), margins=(2,2))
@@ -156,12 +156,25 @@ while True:
                             data2,
                             qtd))
 
+            window['-COD-'].update(values['-COD-'][:0])
+            window['nome_prod'].update(values['nome_prod'][:0])
+            window['preco_prod'].update(values['preco_prod'][:0])
+            window['estoque_prod'].update(values['estoque_prod'][:0])
+            window['estmin_prod'].update(values['estmin_prod'][:0])
+            window['-DATA-'].update(values['-DATA-'][:0])
+            window['-QTD-'].update(values['-QTD-'][:0])
+
+            window.FindElement('-COD-').SetFocus()
+
     if event == 'INSERT':
-        sg.popup('Qtd. do produto digitado:', newlist, title='Teste')
+        sg.popup('Produtos Relacionados:', newlist, title='Teste')
+
+        window.close()
+        sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
 
 
 window.close()
-
+sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
 
 # Não está na CBALT
 # 7891182890045
@@ -171,4 +184,3 @@ window.close()
 # 17896044936920
 
 # All done!
-sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
