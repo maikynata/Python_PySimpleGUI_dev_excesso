@@ -8,6 +8,7 @@ import PySimpleGUI as sg
 import datetime
 
 print = sg.Print
+newlist = []
 
 def select_prod(prod_codigo):
     try:
@@ -49,7 +50,7 @@ def select_prod(prod_codigo):
             connection.close()
 
 
-def update_prod():
+def insert_pendest():
     try:
 
         conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
@@ -94,10 +95,11 @@ layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
           [sg.Input(size=(11, 1), text_color='Black', background_color='White', border_width=3, key='-COD-', focus=True, change_submits=True),
            sg.Input(size=(9, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
            sg.Input(size=(9, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
-          [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],]
+          [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],
+          [sg.Button('Gravar', key='INSERT', pad=(1,5))],]
 
 # Create a window to the user
-window = sg.Window("Dev_Excesso v1.0", layout, element_justification='center', size=(235,215), margins=(2,2))
+window = sg.Window("Dev_Excesso v1.0", layout, element_justification='center', size=(235,235), margins=(2,2))
 
 # Create an event loop
 while True:
@@ -149,7 +151,13 @@ while True:
             window.FindElement('-COD-').SetFocus()
         else:
             qtd = values['-QTD-']
-            sg.popup('Qtd. do produto digitado:', qtd, title='Teste')
+
+            newlist.append((codigo,
+                            data2,
+                            qtd))
+
+    if event == 'INSERT':
+        sg.popup('Qtd. do produto digitado:', newlist, title='Teste')
 
 
 window.close()
