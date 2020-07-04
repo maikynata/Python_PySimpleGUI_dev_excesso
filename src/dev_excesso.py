@@ -19,7 +19,7 @@ def select_prod(prod_codigo):
         sql_update_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
                                 prun_estmin  from produtos, produn
                                 where prod_codigo=prun_prod_codigo and prun_unid_codigo='001' 
-                                and prod_codigo=%s"""
+                                and prod_codigo in (select cbal_prod_codigo from cbalt where cbal_prod_codbarras=%s)"""
         #CAST(prod_codigo=%s as numeric)
         cursor.execute(sql_update_query, [prod_codigo])
         rows = cursor.fetchall()
@@ -118,7 +118,7 @@ while True:
          window['-QTD-'].update(values['-QTD-'][:-1])
 
 
-    if event == '-COD-' and len(window.FindElement(event).Get()) == 6:
+    if event == '-COD-' and ((len(window.FindElement(event).Get()) == 13) or (len(window.FindElement(event).Get()) == 14)):
         codigo = values['-COD-']
         #print(codigo)
 
