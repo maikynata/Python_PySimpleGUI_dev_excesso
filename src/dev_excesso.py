@@ -17,7 +17,7 @@ def select_prod(prod_codigo):
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
-        sql_prod_cod_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
+        sql_prod_cod_query = """select prod_codigo, prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
                                 prun_estmin  from produtos, produn
                                 where prod_codigo=prun_prod_codigo and prun_unid_codigo='001' 
                                 and prod_codbarras=%s"""
@@ -26,7 +26,7 @@ def select_prod(prod_codigo):
         rows = cursor.fetchall()
 
         if len(rows) == 0:
-            sql_prod_cbalt_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
+            sql_prod_cbalt_query = """select prod_codigo, prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
                                             prun_estmin  from produtos, produn
                                             where prod_codigo=prun_prod_codigo and prun_unid_codigo='001' 
                                             and prod_codigo in (select cbal_prod_codigo from cbalt where cbal_prod_codbarras=%s)"""
@@ -50,17 +50,24 @@ def select_prod(prod_codigo):
             connection.close()
 
 
-def insert_pendest():
+def insert_pendest(newlist):
     try:
 
         conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
-        sql_update_query = """update produn
-                              set prun_estmin=2
-                              where prun_unid_codigo='001' and prun_prod_codigo=101567"""
-        cursor.execute(sql_update_query)
+        # nextVal_transacao = """SELECT NextVal('transacao001') As Proximo"""
+
+        sql_update_query = """INSERT INTO PendEst (pest_operacao, pest_transacao, pest_status, pest_datamvto, pest_unid_origem, 
+        pest_unid_destino, pest_prod_codigo, pest_cpes_codigo, pest_cpes_tipo, pest_catentidade, pest_codEntidade, 
+        pest_sequencial, pest_valor, pest_qemb, pest_qtde, pest_qtdebx, pest_transacaobx, pest_bxcompleta, Pest_DataBaixa, 
+        Pest_CtCompra, Pest_CtFiscal, Pest_CtEmpresa, Pest_CtTransf, Pest_Espe_Codigo, Pest_DataValidade, Pest_DataEntrega) 
+        VALUES('001177212711', '00117721271', 'P', CAST(%s AS DATE), '002', '001', %s, '001', 'PI', 
+        'N', 0, 1, 10.27, 0, %s, 0, '', '', CAST(null AS DATE), 11.50228, 11.50228, 11.50228, 12.52944, '', CAST(null AS DATE), 
+        CAST(null AS DATE))"""
+
+        cursor.executemany(sql_update_query, newlist)
         connection.commit()
         count = cursor.rowcount
         sg.popup_ok(count, 'Produtos alterados!')
@@ -139,10 +146,11 @@ while True:
             sg.popup('Produto não encontrado: ', codigo)
 
         for row in select_prod(codigo):
-            window['nome_prod'].update(row[0] + ' ' + row[1] + ' ' + row[2])
-            window['preco_prod'].update(row[3])
-            window['estoque_prod'].update(row[4])
-            window['estmin_prod'].update(row[5])
+            codigo_interno = row[0]
+            window['nome_prod'].update(row[1] + ' ' + row[2] + ' ' + row[3])
+            window['preco_prod'].update(row[4])
+            window['estoque_prod'].update(row[5])
+            window['estmin_prod'].update(row[6])
             window.FindElement('-DATA-').SetFocus()
 
     if event == 'SEND' and values['-QTD-'] != '':
@@ -152,8 +160,9 @@ while True:
         else:
             qtd = values['-QTD-']
 
-            newlist.append((codigo,
-                            data2,
+            data_postgres = datetime.datetime.strptime(data2, '%d/%m/%y').strftime('%Y-%m-%d')
+            newlist.append((data_postgres,
+                            codigo_interno,
                             qtd))
 
             window['-COD-'].update(values['-COD-'][:0])
@@ -168,6 +177,8 @@ while True:
 
     if event == 'INSERT':
         sg.popup('Produtos Relacionados:', newlist, title='Teste')
+
+        insert_pendest(newlist)
 
         window.close()
         sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
