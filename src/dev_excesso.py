@@ -11,6 +11,7 @@ import random
 print = sg.Print
 newlist = []
 
+
 def select_prod(prod_codigo):
     try:
 
@@ -50,6 +51,7 @@ def select_prod(prod_codigo):
             cursor.close()
             connection.close()
 
+
 def cria_transacao():
     try:
 
@@ -79,7 +81,6 @@ def cria_transacao():
 transacao = cria_transacao()
 
 
-
 def insert_pendest(newlist):
     try:
 
@@ -92,7 +93,7 @@ def insert_pendest(newlist):
         pest_sequencial, pest_valor, pest_qemb, pest_qtde, pest_qtdebx, pest_transacaobx, pest_bxcompleta, Pest_DataBaixa, 
         Pest_CtCompra, Pest_CtFiscal, Pest_CtEmpresa, Pest_CtTransf, Pest_Espe_Codigo, Pest_DataValidade, Pest_DataEntrega) 
         VALUES(CONCAT(%s, '1'), %s, 'P', CAST(%s AS DATE), '002', '001', %s, '001', 'PI', 
-        'N', 0, 1, 10.27, 0, %s, 0, '', '', CAST(null AS DATE), 11.50228, 11.50228, 11.50228, 12.52944, '', CAST(null AS DATE), 
+        'N', 0, 1, 10.27, 0, %s, 0, '', '', CAST(null AS DATE), 11.50228, 11.50228, 11.50228, 12.52944, '', CAST(%s AS DATE), 
         CAST(null AS DATE))"""
 
         cursor.executemany(sql_update_query, newlist)
@@ -110,6 +111,7 @@ def insert_pendest(newlist):
         if (connection):
             cursor.close()
             connection.close()
+
 
 # Layout the design of the GUI
 QT_ENTER_KEY1 = 'special 16777220'
@@ -165,7 +167,6 @@ while True:
     if len(values['-QTD-']) and values['-QTD-'][-1] not in ('0123456789'):
          window['-QTD-'].update(values['-QTD-'][:-1])
 
-
     if event == '-COD-' and ((len(window.FindElement(event).Get()) == 13) or (len(window.FindElement(event).Get()) == 14)):
         codigo = values['-COD-']
         #print(codigo)
@@ -189,12 +190,16 @@ while True:
         else:
             qtd = values['-QTD-']
 
+            today = datetime.date.today()
+            dateMvto = today.strftime("%Y-%m-%d")
+
             data_postgres = datetime.datetime.strptime(data2, '%d/%m/%y').strftime('%Y-%m-%d')
             newlist.append((transacao,
                             transacao,
-                            data_postgres,
+                            dateMvto,
                             codigo_interno,
-                            qtd))
+                            qtd,
+                            data_postgres))
 
             window['-COD-'].update(values['-COD-'][:0])
             window['nome_prod'].update(values['nome_prod'][:0])
