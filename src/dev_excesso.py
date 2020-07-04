@@ -6,6 +6,7 @@
 import psycopg2
 import PySimpleGUI as sg
 import datetime
+import random
 
 print = sg.Print
 newlist = []
@@ -49,6 +50,35 @@ def select_prod(prod_codigo):
             cursor.close()
             connection.close()
 
+def cria_transacao():
+    try:
+
+        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
+        connection = psycopg2.connect(conn_string)
+        cursor = connection.cursor()
+
+        unidade = '001'
+        # Cria a Transacao
+        nextVal_transacao = """SELECT NextVal('transacao001') As Proximo"""
+        cursor.execute(nextVal_transacao)
+        nextVal = cursor.fetchone()
+        dig_verif = str(random.randint(0,9))
+        transacao = (unidade + str(nextVal[0]) + dig_verif)
+
+        return transacao
+
+    except(Exception, psycopg2.Error) as error:
+        sg.popup_ok("Error while connecting to PostgreSQL", error)
+
+    finally:
+        # Closing database connection.
+        if (connection):
+            cursor.close()
+            connection.close()
+
+transacao = cria_transacao()
+
+
 
 def insert_pendest(newlist):
     try:
@@ -57,20 +87,19 @@ def insert_pendest(newlist):
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
-        # nextVal_transacao = """SELECT NextVal('transacao001') As Proximo"""
-
         sql_update_query = """INSERT INTO PendEst (pest_operacao, pest_transacao, pest_status, pest_datamvto, pest_unid_origem, 
         pest_unid_destino, pest_prod_codigo, pest_cpes_codigo, pest_cpes_tipo, pest_catentidade, pest_codEntidade, 
         pest_sequencial, pest_valor, pest_qemb, pest_qtde, pest_qtdebx, pest_transacaobx, pest_bxcompleta, Pest_DataBaixa, 
         Pest_CtCompra, Pest_CtFiscal, Pest_CtEmpresa, Pest_CtTransf, Pest_Espe_Codigo, Pest_DataValidade, Pest_DataEntrega) 
-        VALUES('001177212711', '00117721271', 'P', CAST(%s AS DATE), '002', '001', %s, '001', 'PI', 
+        VALUES(CONCAT(%s, '1'), %s, 'P', CAST(%s AS DATE), '002', '001', %s, '001', 'PI', 
         'N', 0, 1, 10.27, 0, %s, 0, '', '', CAST(null AS DATE), 11.50228, 11.50228, 11.50228, 12.52944, '', CAST(null AS DATE), 
         CAST(null AS DATE))"""
 
         cursor.executemany(sql_update_query, newlist)
         connection.commit()
         count = cursor.rowcount
-        sg.popup_ok(count, 'Produtos alterados!')
+        transacao_gravada = newlist[0:1]
+        sg.popup_ok('Transação Gravada: ', transacao_gravada)
 
 
     except(Exception, psycopg2.Error) as error:
@@ -161,7 +190,9 @@ while True:
             qtd = values['-QTD-']
 
             data_postgres = datetime.datetime.strptime(data2, '%d/%m/%y').strftime('%Y-%m-%d')
-            newlist.append((data_postgres,
+            newlist.append((transacao,
+                            transacao,
+                            data_postgres,
                             codigo_interno,
                             qtd))
 
