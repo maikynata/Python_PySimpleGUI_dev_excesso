@@ -16,13 +16,23 @@ def select_prod(prod_codigo):
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
-        sql_update_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
+        sql_prod_cod_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
                                 prun_estmin  from produtos, produn
                                 where prod_codigo=prun_prod_codigo and prun_unid_codigo='001' 
-                                and prod_codigo in (select cbal_prod_codigo from cbalt where cbal_prod_codbarras=%s)"""
+                                and prod_codbarras=%s"""
         #CAST(prod_codigo=%s as numeric)
-        cursor.execute(sql_update_query, [prod_codigo])
+        cursor.execute(sql_prod_cod_query, [prod_codigo])
         rows = cursor.fetchall()
+
+        if len(rows) == 0:
+            sql_prod_cbalt_query = """select prod_descricao, prod_complemento, prod_marca, prun_prvenda, prun_estoque1, 
+                                            prun_estmin  from produtos, produn
+                                            where prod_codigo=prun_prod_codigo and prun_unid_codigo='001' 
+                                            and prod_codigo in (select cbal_prod_codigo from cbalt where cbal_prod_codbarras=%s)"""
+            # CAST(prod_codigo=%s as numeric)
+            cursor.execute(sql_prod_cbalt_query, [prod_codigo])
+            rows = cursor.fetchall()
+
         return rows
         connection.commit()
         count = cursor.rowcount
@@ -144,7 +154,13 @@ while True:
 
 window.close()
 
+
+# Não está na CBALT
 # 7891182890045
+
+# Está na CBALT
+# 7899820806069
+# 17896044936920
 
 # All done!
 sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
