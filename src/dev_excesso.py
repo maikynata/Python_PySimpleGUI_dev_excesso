@@ -72,22 +72,22 @@ QT_ENTER_KEY2 = 'special 16777221'
 sg.SetOptions(element_padding=(4, 0))
 
 layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
-          [sg.Input(size=(37,1), readonly=True, key='nome_prod')],
-          [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("       Est. Min", justification='right')],
-          [sg.Input(size=(11,1), readonly=True, key='preco_prod'),
-           sg.Input(size=(11,1), readonly=True, key='estoque_prod'), sg.Input(size=(11,1),readonly=True, key='estmin_prod')],
-          [sg.Text("V.M.3"), sg.Text("            V.M.12"), sg.Text("        Venda Mês"), ],
-          [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
+          [sg.Input( readonly=True, key='nome_prod')],
+          [sg.Text("Pr. Venda"), sg.Text("   Estoque"), sg.Text("  Est. Min", justification='right')],
+          [sg.Input(size=(9,1), readonly=True, key='preco_prod'),
+           sg.Input(size=(9,1), readonly=True, key='estoque_prod'), sg.Input(size=(9,1),readonly=True, key='estmin_prod')],
+          [sg.Text("V.M.3"), sg.Text("       V.M.12"), sg.Text("     Venda Mês"), ],
+          [sg.Input(size=(9,1), readonly=True), sg.Input(size=(9,1), readonly=True), sg.Input(size=(9,1), readonly=True)],
           [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
-          [sg.Text("Cód. Prod."), sg.Text("     Data Validade"), sg.Text("     Qtd. Dev.")],
+          [sg.Text("Cód. Prod."), sg.Text("     Data Valid."), sg.Text("Qtd. Dev.")],
           [sg.Input(size=(11, 1), text_color='Black', background_color='White', border_width=3, key='-COD-', focus=True, change_submits=True),
-           sg.Input(size=(11, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
-           sg.Input(size=(11, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
+           sg.Input(size=(9, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
+           sg.Input(size=(9, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],]
 
 # Create a window to the user
-window = sg.Window("Dev_Excesso v1.0", layout, element_justification='center')
+window = sg.Window("Dev_Excesso v1.0", layout, element_justification='center', size=(235,215), margins=(2,2))
 
 # Create an event loop
 while True:
@@ -143,6 +143,8 @@ while True:
 
 
 window.close()
+
+# 7891182890045
 
 # All done!
 sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
