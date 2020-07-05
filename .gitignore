@@ -7,4 +7,3 @@ src/__pycache__/*
 Demo*
 test*
 chat-demo.py
-*.sql
