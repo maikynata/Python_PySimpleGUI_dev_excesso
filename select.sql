@@ -16,7 +16,7 @@ SELECT NextVal('transacao001') As Proximo
 select * from pendest limit 10
 
 select * from pendest 
-where Pest_DataMvto = '2020-07-04'
+where Pest_DataMvto = '2020-07-13'
 
 INSERT INTO PendEst (pest_operacao, pest_transacao, pest_status, pest_datamvto, pest_unid_origem, pest_unid_destino, pest_prod_codigo, pest_cpes_codigo, pest_cpes_tipo, pest_catentidade, pest_codEntidade, pest_sequencial, pest_valor, pest_qemb, pest_qtde, pest_qtdebx, pest_transacaobx, pest_bxcompleta, Pest_DataBaixa, Pest_CtCompra, Pest_CtFiscal, Pest_CtEmpresa, Pest_CtTransf, Pest_Espe_Codigo, Pest_DataValidade, Pest_DataEntrega) VALUES('001177212711', '00117721271', 'P', CAST('2020-07-04' AS DATE), '002', '001', 100005, '001', 'PI', 'N', 0, 1, 10.27, 0, 1, 0, '', '', CAST(null AS DATE), 11.50228, 11.50228, 11.50228, 12.52944, '', CAST(null AS DATE), CAST(null AS DATE))
 

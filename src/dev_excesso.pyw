@@ -120,24 +120,28 @@ QT_ENTER_KEY2 = 'special 16777221'
 
 sg.SetOptions(element_padding=(4, 0))
 
-layout = [[sg.Text("Descrição do Produto", auto_size_text=True)],
-          [sg.Input( readonly=True, key='nome_prod')],
-          [sg.Text("Pr. Venda"), sg.Text("   Estoque"), sg.Text("  Est. Min", justification='right')],
-          [sg.Input(size=(9,1), readonly=True, key='preco_prod'),
-           sg.Input(size=(9,1), readonly=True, key='estoque_prod'), sg.Input(size=(9,1),readonly=True, key='estmin_prod')],
-          [sg.Text("V.M.3"), sg.Text("       V.M.12"), sg.Text("     Venda Mês"), ],
-          [sg.Input(size=(9,1), readonly=True), sg.Input(size=(9,1), readonly=True), sg.Input(size=(9,1), readonly=True)],
-          [sg.Text("Estoque Ideal"), sg.Text("Qtd. Sug. P/ Devolver")],
-          [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)],
-          [sg.Text("Cód. Prod."), sg.Text("     Data Valid."), sg.Text("Qtd. Dev.")],
-          [sg.Input(size=(11, 1), text_color='Black', background_color='White', border_width=3, key='-COD-', focus=True, change_submits=True),
-           sg.Input(size=(9, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
-           sg.Input(size=(9, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
+column1 = [[sg.Text("     Estoque Ideal"), sg.Text("      Qtd. Sug. P/ Devolver")],
+          [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)]]
+
+column_text = [[sg.Text("Unidade"), sg.Text("Descrição do Produto")],
+               [sg.Input(readonly=True, key='unidade', size=(6,1)), sg.Input(readonly=True, key='nome_prod', size=(40,1))]]
+
+layout = [[sg.Column(column_text, element_justification='left', pad=(1,2))],
+          [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("         Est. Min")],
+          [sg.Input(size=(12,1), readonly=True, key='preco_prod'),
+           sg.Input(size=(12,1), readonly=True, key='estoque_prod'), sg.Input(size=(12,1), readonly=True, key='estmin_prod')],
+          [sg.Text("V.M.3"), sg.Text("            V.M.12"), sg.Text("           Venda Mês")],
+          [sg.Input(size=(12,1), readonly=True), sg.Input(size=(12,1), readonly=True), sg.Input(size=(12,1), readonly=True)],
+          [sg.Column(column1, element_justification='center')],
+          [sg.Text("Cód. Prod."), sg.Text("        Data Valid."), sg.Text("      Qtd. Dev.")],
+          [sg.Input(size=(12, 1), text_color='Black', background_color='White', border_width=3, key='-COD-', focus=True, change_submits=True),
+           sg.Input(size=(12, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
+           sg.Input(size=(12, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],
-          [sg.Button('Gravar', key='INSERT', pad=(1,3))],]
+          [sg.Button('Gravar', key='INSERT', pad=(1,2))],]
 
 # Create a window to the user
-window = sg.Window("Dev_Excesso v1.0", layout, element_justification='center', size=(235,235), margins=(2,2))
+window = sg.Window("Dev_Excesso v1.0", layout, size=(285,235), element_justification='center', margins=(2,2))
 
 # Create an event loop
 while True:
@@ -215,10 +219,7 @@ while True:
         sg.popup('Produtos Relacionados:', newlist, title='Teste')
 
         insert_pendest(newlist)
-
-        window.close()
-        sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
-
+        break
 
 window.close()
 sg.popup_ok('Ferramenta de Dev_Excesso Encerrada!!!')
