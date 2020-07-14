@@ -124,7 +124,8 @@ column1 = [[sg.Text("     Estoque Ideal"), sg.Text("      Qtd. Sug. P/ Devolver"
           [sg.Input(size=(11,1), readonly=True), sg.Input(size=(11,1), readonly=True)]]
 
 column_text = [[sg.Text("Unidade"), sg.Text("Descrição do Produto")],
-               [sg.Input(readonly=True, key='unidade', size=(6,1)), sg.Input(readonly=True, key='nome_prod', size=(40,1))]]
+               [sg.Input(change_submits=True, key='unidade', size=(6,1), focus=True, border_width=2, text_color='Black', background_color='#ccc'),
+                sg.Input(readonly=True, key='nome_prod', size=(40,1))]]
 
 layout = [[sg.Column(column_text, element_justification='left', pad=(1,2))],
           [sg.Text("Pr. Venda"), sg.Text("       Estoque"), sg.Text("         Est. Min")],
@@ -134,9 +135,9 @@ layout = [[sg.Column(column_text, element_justification='left', pad=(1,2))],
           [sg.Input(size=(12,1), readonly=True), sg.Input(size=(12,1), readonly=True), sg.Input(size=(12,1), readonly=True)],
           [sg.Column(column1, element_justification='center')],
           [sg.Text("Cód. Prod."), sg.Text("        Data Valid."), sg.Text("      Qtd. Dev.")],
-          [sg.Input(size=(12, 1), text_color='Black', background_color='White', border_width=3, key='-COD-', focus=True, change_submits=True),
-           sg.Input(size=(12, 1), text_color='Black', background_color='White', border_width=3, key='-DATA-', change_submits=True),
-           sg.Input(size=(12, 1), key='-QTD-', change_submits=True, background_color='White', border_width=3)],
+          [sg.Input(size=(12, 1), text_color='Black', background_color='#ccc', border_width=3, key='-COD-', change_submits=True),
+           sg.Input(size=(12, 1), text_color='Black', background_color='#ccc', border_width=3, key='-DATA-', change_submits=True),
+           sg.Input(size=(12, 1), key='-QTD-', change_submits=True, background_color='#ccc', border_width=3)],
           [sg.Button('SEND', visible=False, bind_return_key=True, change_submits=True)],
           [sg.Button('Gravar', key='INSERT', pad=(1,2))],]
 
@@ -151,6 +152,9 @@ while True:
         break
 
     # delete char from input. Only accept numbers
+    if len(values['unidade']) and values['unidade'][-1] not in ('0123456789'):
+        window['unidade'].update(values['unidade'][:-1])
+
     if len(values['-COD-']) and values['-COD-'][-1] not in ('0123456789'):
         window['-COD-'].update(values['-COD-'][:-1])
 
@@ -170,6 +174,11 @@ while True:
 
     if len(values['-QTD-']) and values['-QTD-'][-1] not in ('0123456789'):
          window['-QTD-'].update(values['-QTD-'][:-1])
+
+    if event == 'unidade' and ((len(window.FindElement(event).Get()) == 3) or (len(window.FindElement(event).Get()) == 3)):
+        codigo = values['unidade']
+        window.FindElement('-COD-').SetFocus()
+        window['unidade'].update(disabled=True)
 
     if event == '-COD-' and ((len(window.FindElement(event).Get()) == 13) or (len(window.FindElement(event).Get()) == 14)):
         codigo = values['-COD-']
