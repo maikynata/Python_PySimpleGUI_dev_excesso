@@ -12,6 +12,9 @@ where prun_unid_codigo='001' and prun_prod_codigo=101567
 -- Transacao nextVal
 SELECT NextVal(CONCAT('transacao','002')) As Proximo
 
+select unid_codigo from unidades
+where unid_codigo='002'
+
 -- Insert PENDEST
 select * from pendest limit 10
 

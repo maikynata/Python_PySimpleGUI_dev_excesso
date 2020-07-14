@@ -10,12 +10,11 @@ import random
 
 print = sg.Print
 newlist = []
-
+conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
 
 def select_prod(prod_codigo):
     try:
 
-        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
@@ -52,10 +51,33 @@ def select_prod(prod_codigo):
             connection.close()
 
 
+def select_unid(unidade):
+    try:
+
+        connection = psycopg2.connect(conn_string)
+        cursor = connection.cursor()
+
+        query_unid = """select unid_codigo from unidades
+                                where unid_codigo=%s"""
+        cursor.execute(query_unid, [unidade])
+        row_unid_codigo = cursor.fetchall()
+
+        return row_unid_codigo
+
+    except(Exception, psycopg2.Error) as error:
+        sg.popup_ok("Error while connecting to PostgreSQL", error)
+
+    finally:
+        # Closing database connection.
+        if (connection):
+            cursor.close()
+            connection.close()
+
+
+
 def cria_transacao(unidade):
     try:
 
-        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
@@ -82,7 +104,6 @@ def cria_transacao(unidade):
 def insert_pendest(newlist):
     try:
 
-        conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
@@ -175,9 +196,14 @@ while True:
 
     if event == 'unidade' and ((len(window.FindElement(event).Get()) == 3) or (len(window.FindElement(event).Get()) == 3)):
         unidade = values['unidade']
-        window.FindElement('-COD-').SetFocus()
-        window['unidade'].update(disabled=True)
-        transacao = cria_transacao(unidade)
+
+        row = select_unid(unidade)
+        if len(row) == 0:
+            sg.popup('Unidade inválida: ', unidade)
+        else:
+            window.FindElement('-COD-').SetFocus()
+            window['unidade'].update(disabled=True)
+            transacao = cria_transacao(unidade)
 
     if event == '-COD-' and ((len(window.FindElement(event).Get()) == 13) or (len(window.FindElement(event).Get()) == 14)):
         codigo = values['-COD-']
