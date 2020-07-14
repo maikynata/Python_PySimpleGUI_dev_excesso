@@ -216,9 +216,9 @@ while True:
         for row in select_prod(codigo):
             codigo_interno = row[0]
             window['nome_prod'].update(row[1] + ' ' + row[2] + ' ' + row[3])
-            window['preco_prod'].update(row[4])
-            window['estoque_prod'].update(row[5])
-            window['estmin_prod'].update(row[6])
+            window['preco_prod'].update("{:.2f}".format(row[4]))
+            window['estoque_prod'].update("{:.0f}".format(row[5]))
+            window['estmin_prod'].update("{:.0f}".format(row[6]))
             window.FindElement('-DATA-').SetFocus()
 
     if event == 'SEND' and values['-QTD-'] != '':
