@@ -10,7 +10,7 @@ set prun_estmin=2
 where prun_unid_codigo='001' and prun_prod_codigo=101567
 
 -- Transacao nextVal
-SELECT NextVal('transacao001') As Proximo
+SELECT NextVal(CONCAT('transacao','002')) As Proximo
 
 -- Insert PENDEST
 select * from pendest limit 10

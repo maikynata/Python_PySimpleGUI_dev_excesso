@@ -52,20 +52,20 @@ def select_prod(prod_codigo):
             connection.close()
 
 
-def cria_transacao():
+def cria_transacao(unidade):
     try:
 
         conn_string = "host='127.0.0.1' dbname='erp_teste' user='postgres' password='teste123'"
         connection = psycopg2.connect(conn_string)
         cursor = connection.cursor()
 
-        unidade = '001'
+        unid_cod = unidade
         # Cria a Transacao
-        nextVal_transacao = """SELECT NextVal('transacao001') As Proximo"""
-        cursor.execute(nextVal_transacao)
+        nextVal_transacao = """SELECT NextVal(CONCAT('transacao', %s)) As Proximo"""
+        cursor.execute(nextVal_transacao, [unidade])
         nextVal = cursor.fetchone()
         dig_verif = str(random.randint(0,9))
-        transacao = (unidade + str(nextVal[0]) + dig_verif)
+        transacao = (unid_cod + str(nextVal[0]) + dig_verif)
 
         return transacao
 
@@ -77,8 +77,6 @@ def cria_transacao():
         if (connection):
             cursor.close()
             connection.close()
-
-transacao = cria_transacao()
 
 
 def insert_pendest(newlist):
@@ -92,7 +90,7 @@ def insert_pendest(newlist):
         pest_unid_destino, pest_prod_codigo, pest_cpes_codigo, pest_cpes_tipo, pest_catentidade, pest_codEntidade, 
         pest_sequencial, pest_valor, pest_qemb, pest_qtde, pest_qtdebx, pest_transacaobx, pest_bxcompleta, Pest_DataBaixa, 
         Pest_CtCompra, Pest_CtFiscal, Pest_CtEmpresa, Pest_CtTransf, Pest_Espe_Codigo, Pest_DataValidade, Pest_DataEntrega) 
-        VALUES(CONCAT(%s, '1'), %s, 'P', CAST(%s AS DATE), '002', '001', %s, '001', 'PI', 
+        VALUES(CONCAT(%s, '1'), %s, 'P', CAST(%s AS DATE), %s, %s, %s, '001', 'PI', 
         'N', 0, 1, 10.27, 0, %s, 0, '', '', CAST(null AS DATE), 11.50228, 11.50228, 11.50228, 12.52944, '', CAST(%s AS DATE), 
         CAST(null AS DATE))"""
 
@@ -176,9 +174,10 @@ while True:
          window['-QTD-'].update(values['-QTD-'][:-1])
 
     if event == 'unidade' and ((len(window.FindElement(event).Get()) == 3) or (len(window.FindElement(event).Get()) == 3)):
-        codigo = values['unidade']
+        unidade = values['unidade']
         window.FindElement('-COD-').SetFocus()
         window['unidade'].update(disabled=True)
+        transacao = cria_transacao(unidade)
 
     if event == '-COD-' and ((len(window.FindElement(event).Get()) == 13) or (len(window.FindElement(event).Get()) == 14)):
         codigo = values['-COD-']
@@ -210,6 +209,8 @@ while True:
             newlist.append((transacao,
                             transacao,
                             dateMvto,
+                            unidade,
+                            unidade,
                             codigo_interno,
                             qtd,
                             data_postgres))
