@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['src\\dev_excesso.pyw'],
-             pathex=['C:\\Users\\Avell\\PycharmProjects\\dev_excesso'],
+             pathex=['C:\\Users\\Avell\\Projects\\dev_excesso'],
              binaries=[],
              datas=[],
              hiddenimports=[],
