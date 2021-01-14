@@ -1,8 +1,8 @@
 ## Building:
 ```bash
-$ pyinstaller --add-data "database.ini;." category.pyw --onefile --distpath C:\\Users\\Avell\\PycharmProjects\\category_flex\\dist2\\
+$ pyinstaller src/dev_excesso.pyw --onefile --distpath C:\\Users\\Avell\\Projects\\dev_excesso\\dist\\
 ```
 
 ```bash
-$ pyinstaller category.pyw --onefile
+$ pyinstaller src/dev_excesso.pyw --onefile
 ```
